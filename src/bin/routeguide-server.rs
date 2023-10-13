@@ -112,10 +112,11 @@ impl RouteGuide for RouteGuideService {
         let mut n = 0;
         while let Some(point) = stream.next().await {
             println!("get config: {}", n);
-            aws_config::load_from_env().await;
-            println!("done get config: {}", n);
+            let config = aws_config::load_from_env().await;
+            println!("done get config: {:?}", config.app_name());
             n += 1;
             if point.is_err() {
+                println!("{:?}", point.unwrap_err());
                 break;
             }
             let point = point.unwrap();
@@ -140,9 +141,9 @@ impl RouteGuide for RouteGuideService {
             last_point = Some(point);
         }
 
-        println!("done processing: {}", n);
-        aws_config::load_from_env().await;
-        println!("done one config: {}", n);
+        println!("last processing: {}", n);
+        let config = aws_config::load_from_env().await;
+        println!("last processing done get config: {:?}", config.app_name());
 
         summary.elapsed_time = now.elapsed().as_secs() as i32;
 
