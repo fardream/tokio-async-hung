@@ -190,7 +190,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         features: Arc::new(data::load()),
     };
 
-    let svc = RouteGuideServer::new(route_guide);
+    let svc = RouteGuideServer::new(route_guide)
+        .max_decoding_message_size(128 * 1024 * 1024)
+        .max_encoding_message_size(128 * 1024 * 1024);
 
     Server::builder().add_service(svc).serve(addr).await?;
 

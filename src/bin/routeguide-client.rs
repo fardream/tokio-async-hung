@@ -48,7 +48,10 @@ async fn run_record_route(mut client: RouteGuideClient<Channel>) -> Result<(), B
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let client = RouteGuideClient::connect("http://[::1]:10000").await?;
+    let client = RouteGuideClient::connect("http://[::1]:10000")
+        .await?
+        .max_decoding_message_size(128 * 1024 * 1024)
+        .max_encoding_message_size(128 * 1024 * 1024);
 
     println!("\n*** CLIENT STREAMING ***");
     run_record_route(client).await?;
